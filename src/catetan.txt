@@ -1,0 +1,23 @@
+pindah ke branch cc-7 karena sesuai fiturnya
+
+git add .
+git commit -m "design landing page"
+git push origin cc-7
+
+PS C:\Users\Marceline Megan\Desktop\modul 4 mini project\pos-coffee-fe> git push origin cc-7
+Enumerating objects: 21, done.
+Counting objects: 100% (21/21), done.
+Delta compression using up to 8 threads
+Compressing objects: 100% (13/13), done.
+Writing objects: 100% (14/14), 126.72 KiB | 4.69 MiB/s, done.
+Total 14 (delta 2), reused 0 (delta 0), pack-reused 0
+remote: Resolving deltas: 100% (2/2), completed with 2 local objects.
+remote: 
+remote: Create a pull request for 'cc-7' on GitHub by visiting:
+remote:      https://github.com/mmmgn2022/pos-coffee-fe/pull/new/cc-7
+remote:
+To https://github.com/mmmgn2022/pos-coffee-fe.git
+ * [new branch]      cc-7 -> cc-7
+
+reducer products gaperlu krn g dipanggil berkali" di fe
+axios post  
