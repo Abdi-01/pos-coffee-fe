@@ -1,7 +1,6 @@
 import { Flex, Box, FormControl, Spacer, FormLabel, Input, InputGroup, HStack, InputRightElement, Stack, Button, Heading, Text, useColorModeValue, Link, } from '@chakra-ui/react';
 import { useState } from 'react';
 import OrderList from '../Components/OrderList';
-// import { ViewIcon, ViewOffIcon } from '@chakra-ui/icons';
 
 
 export default function Transaction() {
@@ -55,7 +54,6 @@ export default function Transaction() {
                                 _hover={{
                                     bg: 'orange.600',
                                 }}
-
                             >
                                 Continue to Payment
                             </Button>

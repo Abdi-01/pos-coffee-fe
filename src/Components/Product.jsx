@@ -1,19 +1,16 @@
 import React from "react";
 import { Spacer, Card, CardBody, Stack, Heading, Divider, CardFooter, Box, Button, ButtonGroup, Container, Flex, Text, Menu, MenuButton, MenuItem, MenuList, Spinner, Image, IconButton } from '@chakra-ui/react';
-import { FiEdit, FiTrash2 } from 'react-icons/fi';
 
 
 function Product(props) {
   console.log("cek props ", props.product_image);
   return (
-    //   <div>Produk</div>
     <Card minW={{ base: '40%', sm: '40%', md: '30%', lg: '32%' }} bgColor='gray.900' borderRadius={{ base: 'xl', md: '3xl' }} my={{ base: '2', md: '4' }}
       mx={{ base: '0', lg: '1' }}
     >
       <CardBody>
         {/* PRODUCT IMAGE */}
         <Image
-          // src='https://images.unsplash.com/photo-1600056781444-55f3b64235e3?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=928&q=80'
           src={props.productimage}
           alt='menu picture'
           borderRadius={{ base: 'lg', md: 'xl' }}
