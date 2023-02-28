@@ -32,9 +32,6 @@ function LoginPage() {
                     username: username,
                     password: password
                 });
-                console.log("Data dari Response 🪶: ", response);
-
-                console.log("Data dari Response", response.data.username);
 
                 if (response.data.length == 0) {
                     alert('Account not found')

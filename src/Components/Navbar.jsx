@@ -22,11 +22,20 @@ import {
 // import { HamburgerIcon, CloseIcon } from '@chakra-ui/icons';
 import { RxHamburgerMenu } from "react-icons/rx";
 import { CgClose } from "react-icons/cg";
+import { useNavigate } from 'react-router-dom';
+import { useDispatch, useSelector } from "react-redux";
+import { logoutAction } from "../Reducers/auth";
 import Coffeecashierlogo from '../Assets/coffeecashierlogo.png';
 
 
-export default function Simple() {
+export default function Navbar() {
   const { isOpen, onOpen, onClose } = useDisclosure();
+  const navigate = useNavigate();
+  const dispatch = useDispatch();
+  const username = useSelector((state) => state.authReducer.username); // Mengambil data dari reducer
+  console.log("Data username :", username);
+  const roleId = useSelector((state) => state.authReducer.roleId);
+  console.log("Data roleId :", roleId);
 
   return (
     <>
@@ -53,48 +62,70 @@ export default function Simple() {
               as={'nav'}
               spacing={4}
               display={{ base: 'none', md: 'flex' }}>
-              <Text color='white' >Home</Text>
-              <Text color='white' >Product</Text>
-              <Text color='white' >Account</Text>
-              <Text color='white' >Transaction</Text>
+               {
+      username ?
+      (roleId == 1 ?
+      <Menu>
+        <Button color={'#DE6B1F'} variant='ghost' onClick={() => navigate('/landing')}>Product</Button>
+        <Button color={'#DE6B1F'} variant='ghost' onClick={() => navigate('/account')}>Account</Button>
+        <Button color={'#DE6B1F'} variant='ghost' onClick={() => navigate('/transaction')}>Transaction</Button>
+        <Button color={'#DE6B1F'} variant='ghost' onClick={() => navigate('/report')}>Sales Report</Button>
+      </Menu> 
+      :
+      <Menu>
+        <Button color={'#DE6B1F'} variant='ghost' onClick={() => navigate('/landing')}>Product</Button>
+        <Button color={'#DE6B1F'} variant='ghost' onClick={() => navigate('/account')}>Account</Button>
+        <Button color={'#DE6B1F'} variant='ghost' onClick={() => navigate('/transaction')}>Transaction</Button>
+      </Menu>)
+      :
+      null
+    }
               {/* {Links.map((link) => (
                 <NavLink key={link}>{link}</NavLink>
               ))} */}
             </HStack>
           </HStack>
           <Flex alignItems={'center'}>
-            <Menu>
-              <MenuButton
-                as={Button}
-                rounded={'full'}
-                variant={'link'}
-                cursor={'pointer'}
-                minW={0}>
-                <Avatar
-                  size={'sm'}
-                  src={
-                    'https://images.unsplash.com/photo-1493666438817-866a91353ca9?ixlib=rb-0.3.5&q=80&fm=jpg&crop=faces&fit=crop&h=200&w=200&s=b616b2c5b373a80ffc9636ba24f7a4a9'
-                  }
-                />
-              </MenuButton>
-              <MenuList>
-                <MenuItem>Logout</MenuItem>
-
-              </MenuList>
-            </Menu>
+             {
+      username ?
+      <Menu>
+        <MenuButton as={Button}>
+          <Text color='orange.500'>{username}</Text>
+        </MenuButton>
+        <MenuList>
+          <MenuItem type='button' onClick={() => {logoutBtn(); {navigate('/', { replace:true})}}}>Logout</MenuItem>
+        </MenuList>
+      </Menu>
+      :
+      <ButtonGroup>
+            <Button type='button' variant='solid' backgroundColor={"orange.500"} color="white" onClick={() => navigate('/')}>Login</Button>
+            {/* <Button type='button' variant='outline' color='orange.500' onClick={() => navigate('/register')}>Register</Button> */}
+      </ButtonGroup>
+    }
           </Flex>
         </Flex>
 
         {isOpen ? (
           <Box pb={4} display={{ md: 'none' }}>
             <Stack as={'nav'} spacing={4}>
-              <Text color='white'>Home</Text>
-              <Text color='white'>Product</Text>
-              <Text color='white'>Account</Text>
-              <Text color='white'>Transaction</Text>
-              {/* {Links.map((link) => (
-                <NavLink key={link}>{link}</NavLink>
-              ))} */}
+               {
+      username ?
+      (roleId == 1 ?
+      <>
+        <Button color={'#DE6B1F'} variant='ghost' onClick={() => navigate('/landing')}>Product</Button>
+        <Button color={'#DE6B1F'} variant='ghost' onClick={() => navigate('/account')}>Account</Button>
+        <Button color={'#DE6B1F'} variant='ghost' onClick={() => navigate('/transaction')}>Transaction</Button>
+        <Button color={'#DE6B1F'} variant='ghost' onClick={() => navigate('/report')}>Sales Report</Button>
+      </> 
+      :
+      <>
+        <Button color={'#DE6B1F'} variant='ghost' onClick={() => navigate('/landing')}>Product</Button>
+        <Button color={'#DE6B1F'} variant='ghost' onClick={() => navigate('/account')}>Account</Button>
+        <Button color={'#DE6B1F'} variant='ghost' onClick={() => navigate('/transaction')}>Transaction</Button>
+      </>)
+      :
+      null
+    }
             </Stack>
           </Box>
         ) : null}

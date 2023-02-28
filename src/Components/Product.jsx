@@ -1,7 +1,6 @@
 import React from "react";
 import { Spacer, Card, CardBody, Stack, Heading, Divider, CardFooter, Box, Button, ButtonGroup, Container, Flex, Text, Menu, MenuButton, MenuItem, MenuList, Spinner, Image, IconButton } from '@chakra-ui/react';
 
-
 function Product(props) {
   console.log("cek props ", props.product_image);
   return (

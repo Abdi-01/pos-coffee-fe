@@ -11,6 +11,13 @@ import {
   LinkOverlay,
   Image
 } from '@chakra-ui/react';
+import {
+  AiOutlineMessage,
+  AiOutlineHeart,
+  AiOutlineShareAlt,
+  AiOutlineRetweet
+} from 'react-icons/ai';
+import { Link } from 'react-router-dom';
 
 function OrderList(props) {
 

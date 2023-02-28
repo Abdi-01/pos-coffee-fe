@@ -2,7 +2,6 @@ import { Flex, Box, FormControl, Spacer, FormLabel, Input, InputGroup, HStack, I
 import { useState } from 'react';
 import OrderList from '../Components/OrderList';
 
-
 export default function Transaction() {
     return (
         <Flex
