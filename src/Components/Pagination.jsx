@@ -30,6 +30,10 @@ const Pagination = (props) => {
                     }}
                     className='page-link' type="button"
                     mr='4'
+                    _active={{
+                        bg: 'orange.600',
+                        transform: 'scale(0.98)',
+                      }}
                 >
                     {number}
                 </Button>

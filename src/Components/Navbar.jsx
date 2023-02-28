@@ -1,59 +1,40 @@
 import React from "react";
 import { ReactNode } from 'react';
 import {
-Box,
-Flex,
-Avatar,
-HStack,
-Link,
-IconButton,
-Button,
-Menu,
-MenuButton,
-MenuList,
-MenuItem,
-MenuDivider,
-useDisclosure,
-useColorModeValue,
-Text,
-Stack,
-Image
+  Box,
+  Flex,
+  Avatar,
+  HStack,
+  Link,
+  IconButton,
+  Button,
+  Menu,
+  MenuButton,
+  MenuList,
+  MenuItem,
+  MenuDivider,
+  useDisclosure,
+  useColorModeValue,
+  Text,
+  Stack,
+  Image
 } from '@chakra-ui/react';
 // import { HamburgerIcon, CloseIcon } from '@chakra-ui/icons';
 import { RxHamburgerMenu } from "react-icons/rx";
 import { CgClose } from "react-icons/cg";
-import Coffeecashierlogo from '../Assets/coffeecashierlogo.png'; 
+import Coffeecashierlogo from '../Assets/coffeecashierlogo.png';
 
-// function Navbar() {
-//   return (
-  // <nav>Navbar</nav>
-
-  
-  // const NavLink = ({ children }: { children: ReactNode }) => (
-// const NavLink = (props) => (
-//     <Link
-//       px={2}
-//       py={1}
-//       rounded={'md'}
-//     _hover={{
-//         textDecoration: 'none',
-//         bg: useColorModeValue('gray.200', 'gray.700'),
-//     }}
-//     href={'#'}>
-//     {children}
-//   </Link>
-// );
-
-const Links = ['Dashboard', 'Projects', 'Team'];
 
 export default function Simple() {
   const { isOpen, onOpen, onClose } = useDisclosure();
 
   return (
     <>
-      <Box bgColor='gray.900' px={{base:'6', md:'4'}}>
+      <Box bgColor='gray.900' px={{ base: '6', md: '4' }}>
         <Flex h={16} alignItems={'center'} justifyContent={'space-between'}>
           <IconButton
+          bgColor={'gray.900'}
+          color='white'
             size={'md'}
             icon={isOpen ? <CgClose /> : < RxHamburgerMenu />}
             aria-label={'Open Menu'}
@@ -62,17 +43,17 @@ export default function Simple() {
           />
           <HStack spacing={2} alignItems={'center'}>
             <Box>
-            <Image src={Coffeecashierlogo} boxSize='40px' alt="coffeecashier_logo" />
+              <Image src={Coffeecashierlogo} boxSize='40px' alt="coffeecashier_logo" />
             </Box>
-            <Text fontWeight='bold' fontSize='2xl' color='white' className='test' pr='8' display={{ base: 'none', md:'flex' }}> 
-            COFFEE SHOP
+            <Text fontWeight='bold' fontSize='2xl' color='white' className='test' pr='8' display={{ base: 'none', md: 'flex' }}>
+              COFFEE SHOP
             </Text>
-            
+
             <HStack
               as={'nav'}
               spacing={4}
               display={{ base: 'none', md: 'flex' }}>
-                <Text color='white' >Home</Text>
+              <Text color='white' >Home</Text>
               <Text color='white' >Product</Text>
               <Text color='white' >Account</Text>
               <Text color='white' >Transaction</Text>
@@ -98,7 +79,7 @@ export default function Simple() {
               </MenuButton>
               <MenuList>
                 <MenuItem>Logout</MenuItem>
-                
+
               </MenuList>
             </Menu>
           </Flex>
@@ -118,14 +99,8 @@ export default function Simple() {
           </Box>
         ) : null}
       </Box>
-
-      {/* <Box p={4}>Main Content Here</Box> */}
     </>
   );
 }
 
-  
-//   );
-// }
 
-// export default Navbar;
