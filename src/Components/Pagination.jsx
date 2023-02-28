@@ -24,7 +24,8 @@ const Pagination = (props) => {
                     size='md'
                     fontSize="xs"
                     width="4"
-                    bg="orange.500"
+                    variant={props.page + 1 == number ? 'solid' : 'outline'}
+                    colorScheme='orange'
                     _hover={{
                         bg: "orange.600",
                     }}
@@ -33,7 +34,7 @@ const Pagination = (props) => {
                     _active={{
                         bg: 'orange.600',
                         transform: 'scale(0.98)',
-                      }}
+                    }}
                 >
                     {number}
                 </Button>

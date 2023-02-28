@@ -7,7 +7,7 @@ import {
   HStack,
   Link,
   IconButton,
-  Button,
+  Button, ButtonGroup,
   Menu,
   MenuButton,
   MenuList,
@@ -36,6 +36,11 @@ export default function Navbar() {
   console.log("Data username :", username);
   const roleId = useSelector((state) => state.authReducer.roleId);
   console.log("Data roleId :", roleId);
+
+  const logoutBtn = () => {
+    localStorage.removeItem('coffee_login');
+    dispatch(logoutAction());
+  }
 
   return (
     <>
