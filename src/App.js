@@ -6,7 +6,7 @@ import LoginPage from "./Pages/Login";
 import Register from "./Pages/Register";
 import NotFound from "./Pages/NotFound";
 import Landing from "./Pages/Landing";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import React from "react";
 import axios from "axios";
 import { loginAction } from "./Reducers/auth";
@@ -18,6 +18,7 @@ import SalesReport from "./Pages/SalesReport";
 
 function App() {
   const dispatch = useDispatch();
+  const roleId = useSelector((state) => state.authReducer.roleId);
 
   const keepLogin = async () => {
     try {
@@ -46,12 +47,22 @@ function App() {
     <div>
       <Navbar/>
       <Routes>
+        {
+          roleId == 1 ?
+          <>
+          <Route path="/" element={<LoginPage/>}/>
+          <Route path="/register" element={<Register/>}/>
+          <Route path="/landing" element={<Landing/>}/>
+          <Route path="/transaction" element={<Transaction/>}/>
+          <Route path="/account" element={<Account/>}/>
+          <Route path="/report" element={<SalesReport/>}/>
+          </>:
+          roleId == 2 || roleId == null
+        }
         <Route path="/" element={<LoginPage/>}/>
-        <Route path="/register" element={<Register/>}/>
         <Route path="/landing" element={<Landing/>}/>
         <Route path="/transaction" element={<Transaction/>}/>
         <Route path="/account" element={<Account/>}/>
-        <Route path="/report" element={<SalesReport/>}/>
         <Route path='*' element={<NotFound/>} />
       </Routes>
     </div>

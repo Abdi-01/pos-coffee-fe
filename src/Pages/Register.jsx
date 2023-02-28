@@ -5,7 +5,7 @@ import { AiFillEye, AiFillEyeInvisible } from 'react-icons/ai';
 function Register() {
     const [visible, setVisible] = React.useState('password');
 
-    const [email, setEmail] = React.useState('');
+    const [username, setUsername] = React.useState('');
     const [password, setPassword] = React.useState('');
 
     const handleVisible = () => {
@@ -25,7 +25,7 @@ function Register() {
             <Text  fontSize='4xl' fontWeight='bold' color={'white'}>Welcome to Coffee Shop</Text>
             <FormControl my='5'>
                 <FormLabel color={'white'}>Username</FormLabel>
-                <Input backgroundColor={'white'} type='email' onChange={(e) => setEmail(e.target.value)} />
+                <Input backgroundColor={'white'} type='text' onChange={(e) => setUsername(e.target.value)} />
             </FormControl>
             <FormControl my='5'>
                 <FormLabel color={'white'}>Password</FormLabel>
