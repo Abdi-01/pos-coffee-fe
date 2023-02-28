@@ -1,11 +1,35 @@
 import React from "react";
-import { Button, ButtonGroup, Container, Flex, Text, Menu, MenuButton, MenuItem, MenuList, Image, Center } from '@chakra-ui/react';
+import { ReactNode } from 'react';
+import {
+  Box,
+  Flex,
+  Avatar,
+  HStack,
+  Link,
+  IconButton,
+  Button,
+  Menu,
+  MenuButton,
+  MenuList,
+  MenuItem,
+  MenuDivider,
+  useDisclosure,
+  useColorModeValue,
+  Text,
+  Stack,
+  Image
+} from '@chakra-ui/react';
+// import { HamburgerIcon, CloseIcon } from '@chakra-ui/icons';
+import { RxHamburgerMenu } from "react-icons/rx";
+import { CgClose } from "react-icons/cg";
 import { useNavigate } from 'react-router-dom';
 import { useDispatch, useSelector } from "react-redux";
 import { logoutAction } from "../Reducers/auth";
-import coffeecashierlogo from '../Assets/coffeecashierlogo.png';
+import Coffeecashierlogo from '../Assets/coffeecashierlogo.png';
 
-function Navbar() {
+
+export default function Navbar() {
+  const { isOpen, onOpen, onClose } = useDisclosure();
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const username = useSelector((state) => state.authReducer.username); // Mengambil data dari reducer
@@ -13,18 +37,32 @@ function Navbar() {
   const roleId = useSelector((state) => state.authReducer.roleId);
   console.log("Data roleId :", roleId);
 
-  const logoutBtn = () => {
-    localStorage.removeItem('coffee_login');
-    dispatch(logoutAction());
-  }
+  return (
+    <>
+      <Box bgColor='gray.900' px={{ base: '6', md: '4' }}>
+        <Flex h={16} alignItems={'center'} justifyContent={'space-between'}>
+          <IconButton
+          bgColor={'gray.900'}
+          color='white'
+            size={'md'}
+            icon={isOpen ? <CgClose /> : < RxHamburgerMenu />}
+            aria-label={'Open Menu'}
+            display={{ md: 'none' }}
+            onClick={isOpen ? onClose : onOpen}
+          />
+          <HStack spacing={2} alignItems={'center'}>
+            <Box>
+              <Image src={Coffeecashierlogo} boxSize='40px' alt="coffeecashier_logo" />
+            </Box>
+            <Text fontWeight='bold' fontSize='2xl' color='white' className='test' pr='8' display={{ base: 'none', md: 'flex' }}>
+              COFFEE SHOP
+            </Text>
 
-  return <Container backgroundColor={"black"} boxShadow='md' maxW='full'>
-  <Flex py='2.5' alignItems='center' justifyContent='space-between'>
-    <Flex gap='2'>
-      <Image src={coffeecashierlogo} boxSize='40px' alt='Coffee icon' />
-      <Text fontWeight='bold' fontSize='2xl' color={'#DE6B1F'}> <span>COFFEE SHOP</span></Text>
-    </Flex>
-    {
+            <HStack
+              as={'nav'}
+              spacing={4}
+              display={{ base: 'none', md: 'flex' }}>
+               {
       username ?
       (roleId == 1 ?
       <Menu>
@@ -42,7 +80,13 @@ function Navbar() {
       :
       null
     }
-    {
+              {/* {Links.map((link) => (
+                <NavLink key={link}>{link}</NavLink>
+              ))} */}
+            </HStack>
+          </HStack>
+          <Flex alignItems={'center'}>
+             {
       username ?
       <Menu>
         <MenuButton as={Button}>
@@ -58,8 +102,36 @@ function Navbar() {
             {/* <Button type='button' variant='outline' color='orange.500' onClick={() => navigate('/register')}>Register</Button> */}
       </ButtonGroup>
     }
-  </Flex>
-</Container>
+          </Flex>
+        </Flex>
+
+        {isOpen ? (
+          <Box pb={4} display={{ md: 'none' }}>
+            <Stack as={'nav'} spacing={4}>
+               {
+      username ?
+      (roleId == 1 ?
+      <>
+        <Button color={'#DE6B1F'} variant='ghost' onClick={() => navigate('/landing')}>Product</Button>
+        <Button color={'#DE6B1F'} variant='ghost' onClick={() => navigate('/account')}>Account</Button>
+        <Button color={'#DE6B1F'} variant='ghost' onClick={() => navigate('/transaction')}>Transaction</Button>
+        <Button color={'#DE6B1F'} variant='ghost' onClick={() => navigate('/report')}>Sales Report</Button>
+      </> 
+      :
+      <>
+        <Button color={'#DE6B1F'} variant='ghost' onClick={() => navigate('/landing')}>Product</Button>
+        <Button color={'#DE6B1F'} variant='ghost' onClick={() => navigate('/account')}>Account</Button>
+        <Button color={'#DE6B1F'} variant='ghost' onClick={() => navigate('/transaction')}>Transaction</Button>
+      </>)
+      :
+      null
+    }
+            </Stack>
+          </Box>
+        ) : null}
+      </Box>
+    </>
+  );
 }
 
-export default Navbar;
+

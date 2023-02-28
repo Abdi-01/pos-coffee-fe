@@ -1,5 +1,6 @@
 import { configureStore } from "@reduxjs/toolkit";
-import authReducer from "./auth"
+// import reducer
+import authReducer from "./auth";
 
 export const globalStore = configureStore({
   reducer: {
