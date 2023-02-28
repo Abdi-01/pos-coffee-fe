@@ -14,11 +14,13 @@ const Landing = (props) => {
     const [productName, setProductName] = React.useState("");
     const [totalData, setTotalData] = React.useState(0);
     const [currentPage, setCurrentPage] = React.useState(1);
+    const [sortby, setSortby] = React.useState("name");
+    const [order, setOrder] = React.useState("ASC");
 
     const getAllProducts = async () => {
         try {
-            let token = localStorage.getItem("coffee_login"); 
-            let response = await axios.post(`http://localhost:2000/products/list?page=${page}&size=${size}&name=${productName}`, {}, {
+            let token = localStorage.getItem("coffee_login");
+            let response = await axios.post(`http://localhost:2000/products/list?page=${page}&size=${size}&name=${productName}&sortby=${sortby}&order=${order}`, {}, {
                 headers: {
                     'Authorization': `Bearer ${token}`
                 }
@@ -35,7 +37,7 @@ const Landing = (props) => {
     //2. Jalani fungsi getAllProducts
     React.useEffect(() => {
         getAllProducts();
-    }, [page]); 
+    }, [page, sortby, order]); 
 
     //3. Print list of products
     const printAllProducts = () => {
@@ -50,9 +52,7 @@ const Landing = (props) => {
 
     // Change page
     const paginate = pageNumber => {
-    setPage(pageNumber);
-    // console
-    // getAllProducts();
+        setPage(pageNumber);
     };
 
     return (
@@ -84,18 +84,31 @@ const Landing = (props) => {
                             icon={<FiFilter />}
                             variant='outline'
                             color='white'
+                            _expanded={{ bg: 'white', color:'black' }}
                         />
                         <MenuList>
-                            <MenuItem>
+                            <MenuItem onClick={() => {
+                                setSortby("name")
+                                setOrder("ASC") 
+                            }}>
                                 Sort by product name A-Z
                             </MenuItem>
-                            <MenuItem>
+                            <MenuItem onClick={() => {
+                                setSortby("name")
+                                setOrder("DESC")
+                            }}>
                                 Sort by product name Z-A
                             </MenuItem>
-                            <MenuItem >
+                            <MenuItem onClick={() => {
+                                setSortby("price")
+                                setOrder("ASC")
+                            }}>
                                 Sort by product price low-high
                             </MenuItem>
-                            <MenuItem>
+                            <MenuItem onClick={() => {
+                                setSortby("price")
+                                setOrder("DESC")
+                            }}>
                                 Sort by product name high-low
                             </MenuItem>
                         </MenuList>
@@ -103,27 +116,50 @@ const Landing = (props) => {
                 </Flex>
                 <Flex pb='5' pl={{ base: '3', lg: '2' }}>
                     <ButtonGroup>
-                        <Button bgColor={"black"} color='white'>
+                        <Button bgColor={"black"} color='white' 
+                         _hover={{ bg: '#DE6B1F' }}
+                         _active={{
+                           bg: '#DE6B1F',
+                           transform: 'scale(0.98)',
+                         }}
+                     >
                             All
                         </Button>
-                        <Button bgColor={"black"} color='white'>
+                        <Button bgColor={"black"} color='white'
+                        _hover={{ bg: '#DE6B1F' }}
+                        _active={{
+                          bg: '#DE6B1F',
+                          transform: 'scale(0.98)',
+                        }}
+                        >
                             Coffee
                         </Button>
-                        <Button bgColor={"black"} color='white'>
+                        <Button bgColor={"black"} color='white'
+                        _hover={{ bg: '#DE6B1F' }}
+                        _active={{
+                          bg: '#DE6B1F',
+                          transform: 'scale(0.98)',
+                        }}
+                        >
                             Croissant
                         </Button>
-                        <Button bgColor={"black"} color='white'>
+                        <Button bgColor={"black"} color='white'
+                        _hover={{ bg: '#DE6B1F' }}
+                         _active={{
+                           bg: '#DE6B1F',
+                           transform: 'scale(0.98)',
+                         }}>
                             Ice Cream
                         </Button>
                     </ButtonGroup>
                 </Flex>
                 <Flex maxW='6xs' flexWrap='wrap' justifyContent='space-evenly' alignItem='start'>
                     {printAllProducts()}
-                <Flex my='10' w='full' justify={'center'}>
-                    <Pagination size={size} page={page} totalData={totalData} paginate={paginate} />
+                    <Flex my='10' w='full' justify={'center'}>
+                        <Pagination size={size} page={page} totalData={totalData} paginate={paginate} />
+                    </Flex>
                 </Flex>
-                </Flex>
-               
+
             </Box>
             {/* RIGHT CONTENT */}
             <Box flex={{ base: 'none', lg: '1' }}>
