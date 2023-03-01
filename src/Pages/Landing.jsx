@@ -16,17 +16,19 @@ const Landing = (props) => {
     const [currentPage, setCurrentPage] = React.useState(1);
     const [sortby, setSortby] = React.useState("name");
     const [order, setOrder] = React.useState("ASC");
+    const [category, setCategory] = React.useState("");
 
     const getAllProducts = async () => {
         try {
             let token = localStorage.getItem("coffee_login");
-            let response = await axios.post(`http://localhost:2000/products/list?page=${page}&size=${size}&name=${productName}&sortby=${sortby}&order=${order}`, {}, {
+            let response = await axios.post(`http://localhost:2000/products/list?page=${page}&size=${size}&name=${productName}&sortby=${sortby}&order=${order}&category=${category}`, {}, {
                 headers: {
                     'Authorization': `Bearer ${token}`
                 }
             });
             console.log("ini response.data dari getAllProducts 🪶 : ", response.data);
             console.log("ini ambil total data dari getAllProducts 🪶 : ", response.data.datanum);
+
             setTotalData(response.data.datanum);
             setShowProducts(response.data.data);
         } catch (error) {
@@ -37,13 +39,14 @@ const Landing = (props) => {
     //2. Jalani fungsi getAllProducts
     React.useEffect(() => {
         getAllProducts();
-    }, [page, sortby, order]); 
+    }, [page, sortby, order, category]); 
 
     //3. Print list of products
     const printAllProducts = () => {
         console.log("INI ISI Showproducts:", showProducts);
         let print = showProducts.map((val, idx) => {
             console.log("ini val : ", val);
+            console.log("ini ambil category data dari getAllProducts 🪶 : ", val.category.category);
             return < Product name={val.name} productimage={val.product_image} price={val.price} />
         });
         return print;
@@ -75,7 +78,7 @@ const Landing = (props) => {
                 </Text>
                 <Flex p={{ base: '4', lg: '2' }} >
                     <Flex pl={{ base: '6', lg: '2' }} pr='2'>
-                        <SearchBar />
+                        <SearchBar productName={productName} setProductName={setProductName} getAllProducts={getAllProducts} setPage={setPage}/> 
                     </Flex >
                     <Menu>
                         <MenuButton
@@ -117,38 +120,47 @@ const Landing = (props) => {
                 <Flex pb='5' pl={{ base: '3', lg: '2' }}>
                     <ButtonGroup>
                         <Button bgColor={"black"} color='white' 
+                        backgroundColor={category=="" ? ('orange.500') : ('black')}
                          _hover={{ bg: '#DE6B1F' }}
                          _active={{
                            bg: '#DE6B1F',
                            transform: 'scale(0.98)',
                          }}
+                         onClick={()=>setCategory("")}
                      >
                             All
                         </Button>
                         <Button bgColor={"black"} color='white'
+                        backgroundColor={category=="Coffee" ? ('orange.500') : ('black')}
                         _hover={{ bg: '#DE6B1F' }}
                         _active={{
                           bg: '#DE6B1F',
                           transform: 'scale(0.98)',
                         }}
+                        onClick={()=>setCategory("Coffee")}
                         >
                             Coffee
                         </Button>
                         <Button bgColor={"black"} color='white'
+                        backgroundColor={category=="Croissant" ? ('orange.500') : ('black')}
                         _hover={{ bg: '#DE6B1F' }}
                         _active={{
                           bg: '#DE6B1F',
                           transform: 'scale(0.98)',
                         }}
+                        onClick={()=>setCategory("Croissant")}
                         >
                             Croissant
                         </Button>
                         <Button bgColor={"black"} color='white'
+                        backgroundColor={category=="Ice Cream" ? ('orange.500') : ('black')}
                         _hover={{ bg: '#DE6B1F' }}
                          _active={{
                            bg: '#DE6B1F',
                            transform: 'scale(0.98)',
-                         }}>
+                         }}
+                         onClick={()=>setCategory("Ice Cream")}    
+                         >
                             Ice Cream
                         </Button>
                     </ButtonGroup>
