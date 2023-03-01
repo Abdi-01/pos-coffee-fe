@@ -22,10 +22,11 @@ import {
 // import { HamburgerIcon, CloseIcon } from '@chakra-ui/icons';
 import { RxHamburgerMenu } from "react-icons/rx";
 import { CgClose } from "react-icons/cg";
-import { useNavigate } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 import { useDispatch, useSelector } from "react-redux";
 import { logoutAction } from "../Reducers/auth";
 import Coffeecashierlogo from '../Assets/coffeecashierlogo.png';
+
 
 
 export default function Navbar() {
@@ -36,6 +37,7 @@ export default function Navbar() {
   console.log("Data username :", username);
   const roleId = useSelector((state) => state.authReducer.roleId);
   console.log("Data roleId :", roleId);
+  const location = useLocation();
 
   const logoutBtn = () => {
     localStorage.removeItem('coffee_login');
@@ -71,16 +73,20 @@ export default function Navbar() {
       username ?
       (roleId == 1 ?
       <Menu>
-        <Button color={'#DE6B1F'} variant='ghost' onClick={() => navigate('/landing')}>Product</Button>
-        <Button color={'#DE6B1F'} variant='ghost' onClick={() => navigate('/account')}>Account</Button>
-        <Button color={'#DE6B1F'} variant='ghost' onClick={() => navigate('/transaction')}>Transaction</Button>
-        <Button color={'#DE6B1F'} variant='ghost' onClick={() => navigate('/report')}>Sales Report</Button>
+        <Button 
+        // uselocation buat ngecek yang aktif link apa 
+        color={location ? '#DE6B1F' : 'white' }
+        // color='white' 
+        variant='ghost' onClick={() => navigate('/landing')}>Product</Button>
+        <Button color={'white'} variant='ghost' onClick={() => navigate('/account')}>Account</Button>
+        <Button color={'white'} variant='ghost' onClick={() => navigate('/transaction')}>Transaction</Button>
+        <Button color={'white'} variant='ghost' onClick={() => navigate('/report')}>Sales Report</Button>
       </Menu> 
       :
       <Menu>
-        <Button color={'#DE6B1F'} variant='ghost' onClick={() => navigate('/landing')}>Product</Button>
-        <Button color={'#DE6B1F'} variant='ghost' onClick={() => navigate('/account')}>Account</Button>
-        <Button color={'#DE6B1F'} variant='ghost' onClick={() => navigate('/transaction')}>Transaction</Button>
+        <Button color={'white'} variant='ghost' onClick={() => navigate('/landing')}>Product</Button>
+        <Button color={'white'} variant='ghost' onClick={() => navigate('/account')}>Account</Button>
+        <Button color={'white'} variant='ghost' onClick={() => navigate('/transaction')}>Transaction</Button>
       </Menu>)
       :
       null
@@ -95,10 +101,10 @@ export default function Navbar() {
       username ?
       <Menu>
         <MenuButton as={Button}>
-          <Text color='orange.500'>{username}</Text>
+          <Text color='orange.500' variant='outline'>Welcome, {username}</Text>
         </MenuButton>
         <MenuList>
-          <MenuItem type='button' onClick={() => {logoutBtn(); {navigate('/', { replace:true})}}}>Logout</MenuItem>
+          <MenuItem type='button' onClick={() => {logoutBtn(); {navigate('/', {replace:true})}}}>Logout</MenuItem>
         </MenuList>
       </Menu>
       :
@@ -117,16 +123,16 @@ export default function Navbar() {
       username ?
       (roleId == 1 ?
       <>
-        <Button color={'#DE6B1F'} variant='ghost' onClick={() => navigate('/landing')}>Product</Button>
-        <Button color={'#DE6B1F'} variant='ghost' onClick={() => navigate('/account')}>Account</Button>
-        <Button color={'#DE6B1F'} variant='ghost' onClick={() => navigate('/transaction')}>Transaction</Button>
-        <Button color={'#DE6B1F'} variant='ghost' onClick={() => navigate('/report')}>Sales Report</Button>
+        <Button color={'white'} variant='ghost' onClick={() => navigate('/landing')}>Product</Button>
+        <Button color={'white'} variant='ghost' onClick={() => navigate('/account')}>Account</Button>
+        <Button color={'white'} variant='ghost' onClick={() => navigate('/transaction')}>Transaction</Button>
+        <Button color={'white'} variant='ghost' onClick={() => navigate('/report')}>Sales Report</Button>
       </> 
       :
       <>
-        <Button color={'#DE6B1F'} variant='ghost' onClick={() => navigate('/landing')}>Product</Button>
-        <Button color={'#DE6B1F'} variant='ghost' onClick={() => navigate('/account')}>Account</Button>
-        <Button color={'#DE6B1F'} variant='ghost' onClick={() => navigate('/transaction')}>Transaction</Button>
+        <Button color={'white'} variant='ghost' onClick={() => navigate('/landing')}>Product</Button>
+        <Button color={'white'} variant='ghost' onClick={() => navigate('/account')}>Account</Button>
+        <Button color={'white'} variant='ghost' onClick={() => navigate('/transaction')}>Transaction</Button>
       </>)
       :
       null
