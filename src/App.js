@@ -1,4 +1,3 @@
-import logo from "./logo.svg";
 import "./App.css";
 import Navbar from "./Components/Navbar";
 import { Route, Routes } from "react-router-dom";
@@ -14,7 +13,7 @@ import { API_URL } from "./helper";
 import Transaction from "./Pages/Transaction";
 import Account from "./Pages/Account";
 import SalesReport from "./Pages/SalesReport";
-
+import Inventory from "./Pages/Inventory";
 
 function App() {
   const dispatch = useDispatch();
@@ -22,22 +21,21 @@ function App() {
 
   const keepLogin = async () => {
     try {
-      let token = localStorage.getItem('coffee_login');
+      let token = localStorage.getItem("coffee_login");
       if (token) {
         let response = await axios.get(`${API_URL}/auth/keep_login`, {
           headers: {
-            Authorization: `Bearer ${token}`
-          }
+            Authorization: `Bearer ${token}`,
+          },
         });
         console.log("ini respon dari localstorage :", response.data);
-        localStorage.setItem('coffee_login', response.data.token)
+        localStorage.setItem("coffee_login", response.data.token);
         dispatch(loginAction(response.data));
-
       }
     } catch (error) {
       console.log(error);
     }
-  }
+  };
 
   React.useEffect(() => {
     keepLogin();
@@ -45,25 +43,26 @@ function App() {
 
   return (
     <div>
-      <Navbar/>
+      <Navbar />
       <Routes>
-        {
-          roleId == 1 ?
+        {roleId == 1 ? (
           <>
-          <Route path="/" element={<LoginPage/>}/>
-          <Route path="/register" element={<Register/>}/>
-          <Route path="/landing" element={<Landing/>}/>
-          <Route path="/transaction" element={<Transaction/>}/>
-          <Route path="/account" element={<Account/>}/>
-          <Route path="/report" element={<SalesReport/>}/>
-          </>:
+            <Route path="/" element={<LoginPage />} />
+            <Route path="/register" element={<Register />} />
+            <Route path="/landing" element={<Landing />} />
+            <Route path="/transaction" element={<Transaction />} />
+            <Route path="/account" element={<Account />} />
+            <Route path="/report" element={<SalesReport />} />
+            <Route path="/inventory" element={<Inventory />} />
+          </>
+        ) : (
           roleId == 2 || roleId == null
-        }
-        <Route path="/" element={<LoginPage/>}/>
-        <Route path="/landing" element={<Landing/>}/>
-        <Route path="/transaction" element={<Transaction/>}/>
-        <Route path="/account" element={<Account/>}/>
-        <Route path='*' element={<NotFound/>} />
+        )}
+        <Route path="/" element={<LoginPage />} />
+        <Route path="/landing" element={<Landing />} />
+        <Route path="/transaction" element={<Transaction />} />
+        <Route path="/account" element={<Account />} />
+        <Route path="*" element={<NotFound />} />
       </Routes>
     </div>
   );

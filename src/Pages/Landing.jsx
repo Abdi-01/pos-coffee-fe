@@ -16,11 +16,12 @@ const Landing = (props) => {
     const [currentPage, setCurrentPage] = React.useState(1);
     const [sortby, setSortby] = React.useState("name");
     const [order, setOrder] = React.useState("ASC");
+    const [status] = React.useState(1);
 
     const getAllProducts = async () => {
         try {
             let token = localStorage.getItem("coffee_login");
-            let response = await axios.post(`http://localhost:2000/products/list?page=${page}&size=${size}&name=${productName}&sortby=${sortby}&order=${order}`, {}, {
+            let response = await axios.post(`http://localhost:2000/products/list?page=${page}&size=${size}&name=${productName}&sortby=${sortby}&order=${order}&status=${status}`, {}, {
                 headers: {
                     'Authorization': `Bearer ${token}`
                 }
@@ -37,7 +38,7 @@ const Landing = (props) => {
     //2. Jalani fungsi getAllProducts
     React.useEffect(() => {
         getAllProducts();
-    }, [page, sortby, order]); 
+    }, [page, sortby, order]);
 
     //3. Print list of products
     const printAllProducts = () => {
@@ -84,12 +85,12 @@ const Landing = (props) => {
                             icon={<FiFilter />}
                             variant='outline'
                             color='white'
-                            _expanded={{ bg: 'white', color:'black' }}
+                            _expanded={{ bg: 'white', color: 'black' }}
                         />
                         <MenuList>
                             <MenuItem onClick={() => {
                                 setSortby("name")
-                                setOrder("ASC") 
+                                setOrder("ASC")
                             }}>
                                 Sort by product name A-Z
                             </MenuItem>
@@ -116,39 +117,39 @@ const Landing = (props) => {
                 </Flex>
                 <Flex pb='5' pl={{ base: '3', lg: '2' }}>
                     <ButtonGroup>
-                        <Button bgColor={"black"} color='white' 
-                         _hover={{ bg: '#DE6B1F' }}
-                         _active={{
-                           bg: '#DE6B1F',
-                           transform: 'scale(0.98)',
-                         }}
-                     >
+                        <Button bgColor={"black"} color='white'
+                            _hover={{ bg: '#DE6B1F' }}
+                            _active={{
+                                bg: '#DE6B1F',
+                                transform: 'scale(0.98)',
+                            }}
+                        >
                             All
                         </Button>
                         <Button bgColor={"black"} color='white'
-                        _hover={{ bg: '#DE6B1F' }}
-                        _active={{
-                          bg: '#DE6B1F',
-                          transform: 'scale(0.98)',
-                        }}
+                            _hover={{ bg: '#DE6B1F' }}
+                            _active={{
+                                bg: '#DE6B1F',
+                                transform: 'scale(0.98)',
+                            }}
                         >
                             Coffee
                         </Button>
                         <Button bgColor={"black"} color='white'
-                        _hover={{ bg: '#DE6B1F' }}
-                        _active={{
-                          bg: '#DE6B1F',
-                          transform: 'scale(0.98)',
-                        }}
+                            _hover={{ bg: '#DE6B1F' }}
+                            _active={{
+                                bg: '#DE6B1F',
+                                transform: 'scale(0.98)',
+                            }}
                         >
                             Croissant
                         </Button>
                         <Button bgColor={"black"} color='white'
-                        _hover={{ bg: '#DE6B1F' }}
-                         _active={{
-                           bg: '#DE6B1F',
-                           transform: 'scale(0.98)',
-                         }}>
+                            _hover={{ bg: '#DE6B1F' }}
+                            _active={{
+                                bg: '#DE6B1F',
+                                transform: 'scale(0.98)',
+                            }}>
                             Ice Cream
                         </Button>
                     </ButtonGroup>
