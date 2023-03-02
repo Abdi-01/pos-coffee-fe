@@ -52,7 +52,7 @@ export default function Navbar() {
             size={'md'}
             icon={isOpen ? <CgClose /> : < RxHamburgerMenu />}
             aria-label={'Open Menu'}
-            display={{ md: 'none' }}
+            display={{ lg: 'none' }}
             onClick={isOpen ? onClose : onOpen}
           />
           <HStack spacing={2} alignItems={'center'}>
@@ -66,7 +66,7 @@ export default function Navbar() {
             <HStack
               as={'nav'}
               spacing={4}
-              display={{ base: 'none', md: 'flex' }}>
+              display={{ base: 'none', lg: 'flex' }}>
               {
                 username ?
                   (roleId == 1 ?
@@ -76,6 +76,7 @@ export default function Navbar() {
                       <Button color={'#DE6B1F'} variant='ghost' onClick={() => navigate('/transaction')}>Transaction</Button>
                       <Button color={'#DE6B1F'} variant='ghost' onClick={() => navigate('/report')}>Sales Report</Button>
                       <Button color={'#DE6B1F'} variant='ghost' onClick={() => navigate('/inventory')}>Inventory</Button>
+                      <Button color={'#DE6B1F'} variant='ghost' onClick={() => navigate('/category')}>Categories</Button>
                     </Menu>
                     :
                     <Menu>
@@ -123,6 +124,7 @@ export default function Navbar() {
                       <Button color={'#DE6B1F'} variant='ghost' onClick={() => navigate('/transaction')}>Transaction</Button>
                       <Button color={'#DE6B1F'} variant='ghost' onClick={() => navigate('/report')}>Sales Report</Button>
                       <Button color={'#DE6B1F'} variant='ghost' onClick={() => navigate('/inventory')}>Inventory</Button>
+                      <Button color={'#DE6B1F'} variant='ghost' onClick={() => navigate('/category')}>Categories</Button>
                     </>
                     :
                     <>

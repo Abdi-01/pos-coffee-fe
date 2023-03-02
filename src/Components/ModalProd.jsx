@@ -19,7 +19,7 @@ function ModalProd(props) {
 
 
     const printAllCategories = () => {
-        return props.category.map((val) => {
+        return props.allcategory.map((val) => {
             return (
                 <option style={{ backgroundColor: "black", color: "white" }} value={`${val.id}`}>{val.category}</option>
             )

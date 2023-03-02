@@ -1,4 +1,4 @@
-import { Text, Box, Image, Table, TableContainer, Tbody, Td, Th, Thead, Tr, ButtonGroup, IconButton, Flex, Button, useDisclosure, useToast, Stack, Switch } from '@chakra-ui/react';
+import { Text, Box, Image, Table, TableContainer, Tbody, Td, Th, Thead, Tr, IconButton, Flex, Button, useDisclosure, useToast, Stack, Switch } from '@chakra-ui/react';
 import axios from 'axios';
 import React from 'react';
 
@@ -7,6 +7,7 @@ import { BiEditAlt } from 'react-icons/bi'
 import { BsPlusLg } from 'react-icons/bs'
 import ModalProd from '../Components/ModalProd';
 import ModalCategory from '../Components/ModalCategory';
+import ModalEcat from '../Components/ModalEcat';
 
 
 
@@ -14,14 +15,13 @@ import ModalCategory from '../Components/ModalCategory';
 function Inventory() {
     const toast = useToast()
     const modalProduct = useDisclosure();
-    const modalCategory = useDisclosure();
     const [page, setPage] = React.useState(0);
     const [size, setSize] = React.useState(99999);
     const [productName, setProductName] = React.useState("");
     const [sortby, setSortby] = React.useState("name");
     const [order, setOrder] = React.useState("ASC");
     const [showProducts, setShowProducts] = React.useState([]);
-    const [category, setCategory] = React.useState([]); // for get all category
+    const [allcategory, setallCategory] = React.useState([]); // for get all category
     const [name, setName] = React.useState("");
     const [productImage, setProductImage] = React.useState("");
     const [price, setPrice] = React.useState(0);
@@ -29,8 +29,8 @@ function Inventory() {
     const [categoryId, setCategoryId] = React.useState(1); // for create new product
     const [status, setStatus] = React.useState([]);
     const [statusId, setStatusId] = React.useState("1");
-    const [catField, setCatField] = React.useState("")
-
+    const [category] = React.useState("");
+    const [statusget] = React.useState("");
 
 
     const getAllCategory = async () => {
@@ -42,7 +42,7 @@ function Inventory() {
                 }
             })
             console.log("hasil response get all category", response.data.data)
-            setCategory(response.data.data)
+            setallCategory(response.data.data)
         } catch (error) {
             console.log("dari getAllCategory : ", error);
         }
@@ -90,8 +90,6 @@ function Inventory() {
                 })
                 getAllProducts();
             }
-
-
         } catch (error) {
             console.log("dari getAllCategory : ", error);
         }
@@ -100,7 +98,7 @@ function Inventory() {
     const getAllProducts = async () => {
         try {
             let token = localStorage.getItem("coffee_login");
-            let response = await axios.post(`http://localhost:2000/products/list?page=${page}&size=${size}&name=${productName}&sortby=${sortby}&order=${order}`, {}, {
+            let response = await axios.post(`http://localhost:2000/products/list?page=${page}&size=${size}&name=${productName}&sortby=${sortby}&order=${order}&category=${category}&status=${statusget}`, {}, {
                 headers: {
                     'Authorization': `Bearer ${token}`
                 }
@@ -139,39 +137,11 @@ function Inventory() {
             console.log("dari deleteItem : ", error);
         }
     }
-    const addCategory = async () => {
-        try {
-            let token = localStorage.getItem("coffee_login");
-            let response = await axios.post(`http://localhost:2000/products/add_category`, {
-                category: catField
-            }, {
-                headers: {
-                    'Authorization': `Bearer ${token}`
-                }
-            })
-            if (response) {
-
-                modalProduct.onClose();
-                toast({
-                    description: `${catField} has been added`,
-                    position: "top",
-                    status: 'success',
-                    duration: 2000,
-                    isClosable: true
-                })
-                getAllCategory();
-            }
-
-
-        } catch (error) {
-            console.log("dari getAllCategory : ", error);
-        }
-    }
 
 
     const printAllProducts = () => {
         return showProducts.map((val, idx) => {
-            console.log("hasil val =", val);
+            // console.log("hasil val =", val);
             return (
 
                 <Tr color="white">
@@ -190,8 +160,6 @@ function Inventory() {
                         </Stack>
                     </Td>
                 </Tr>
-
-
             )
         })
     }
@@ -203,18 +171,14 @@ function Inventory() {
     }, [name, statusId]);
 
     return (
-        <Box w="100vw" mx="auto" bgColor={"black"}>
-            <Box w="65%" mx="auto">
+        <Box w="100vw" mx="auto" bgColor={"black"} h="full">
+            <Box maxW="65vw" mx="auto" >
                 <Flex py="5" alignItems="center" justifyContent="space-between">
                     <Text color="White" fontSize="3xl" fontWeight="semibold"> All Products</Text>
-                    <ButtonGroup gap="5">
-                        <Button variant="solid" colorScheme={"orange"} mt="2" onClick={modalProduct.onOpen}> <BsPlusLg /> <Text marginLeft="3" mb="3px" fontSize="xl">Product</Text></Button>
-                        <Button variant="solid" colorScheme={"orange"} mt="2" onClick={modalCategory.onOpen}> <BsPlusLg /> <Text marginLeft="3" mb="3px" fontSize="xl">Category</Text> </Button>
-                    </ButtonGroup>
-                    <ModalProd isOpen={modalProduct.isOpen} onClose={modalProduct.onClose} category={category} addNewProduct={addNewProduct} name={name} setName={setName} productImage={productImage} setProductImage={setProductImage} price={price} setPrice={setPrice} stock={stock} setStock={setStock} setCategoryId={setCategoryId} status={status} setStatusId={setStatusId} />
-                    <ModalCategory isOpen={modalCategory.isOpen} onClose={modalCategory.onClose} setCatField={setCatField} addCategory={addCategory} />
+                    <Button variant="solid" colorScheme={"orange"} mt="2" onClick={modalProduct.onOpen}> <BsPlusLg /> <Text marginLeft="3" mb="3px" fontSize="xl">Product</Text></Button>
+                    <ModalProd isOpen={modalProduct.isOpen} onClose={modalProduct.onClose} allcategory={allcategory} addNewProduct={addNewProduct} name={name} setName={setName} productImage={productImage} setProductImage={setProductImage} price={price} setPrice={setPrice} stock={stock} setStock={setStock} setCategoryId={setCategoryId} status={status} setStatusId={setStatusId} />
                 </Flex>
-                <TableContainer>
+                <TableContainer overflowX="hidden" maxW="100%">
                     <Table variant='simple' fontSize="xl">
                         <Thead>
                             <Tr>

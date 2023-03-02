@@ -23,9 +23,9 @@ function ModalCategory(props) {
                 <ModalCloseButton size="lg" color="red" />
 
                 <ModalBody>
-                    <FormControl my="3">
+                    <FormControl my="3" isRequired={true} >
                         <FormLabel fontWeight="semibold">Category</FormLabel>
-                        <Input borderColor="orange" placeholder='Coffee' onChange={(e) => props.setCatField(e.target.value)} isre />
+                        <Input borderColor="orange" placeholder='Coffee' onChange={(e) => props.setCategory(e.target.value)} />
                     </FormControl>
                 </ModalBody>
 

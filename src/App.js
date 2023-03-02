@@ -14,6 +14,7 @@ import Transaction from "./Pages/Transaction";
 import Account from "./Pages/Account";
 import SalesReport from "./Pages/SalesReport";
 import Inventory from "./Pages/Inventory";
+import Categories from "./Pages/Categories";
 
 function App() {
   const dispatch = useDispatch();
@@ -54,6 +55,7 @@ function App() {
             <Route path="/account" element={<Account />} />
             <Route path="/report" element={<SalesReport />} />
             <Route path="/inventory" element={<Inventory />} />
+            <Route path="/category" element={<Categories />} />
           </>
         ) : (
           roleId == 2 || roleId == null
