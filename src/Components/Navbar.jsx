@@ -22,10 +22,11 @@ import {
 // import { HamburgerIcon, CloseIcon } from '@chakra-ui/icons';
 import { RxHamburgerMenu } from "react-icons/rx";
 import { CgClose } from "react-icons/cg";
-import { useNavigate } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 import { useDispatch, useSelector } from "react-redux";
 import { logoutAction } from "../Reducers/auth";
 import Coffeecashierlogo from '../Assets/coffeecashierlogo.png';
+
 
 
 export default function Navbar() {
@@ -36,6 +37,7 @@ export default function Navbar() {
   console.log("Data username :", username);
   const roleId = useSelector((state) => state.authReducer.roleId);
   console.log("Data roleId :", roleId);
+  const location = useLocation();
 
   const logoutBtn = () => {
     localStorage.removeItem('coffee_login');

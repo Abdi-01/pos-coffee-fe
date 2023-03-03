@@ -42,10 +42,10 @@ const Landing = (props) => {
     React.useEffect(() => {
         getAllProducts();
     }, [page, sortby, order, category]);
-    React.useEffect(() => {
+   
+   React.useEffect(() => {
         getAllCategory();
     }, []);
-
 
     //3. Print list of products
     const printAllProducts = () => {
@@ -176,48 +176,6 @@ const Landing = (props) => {
                             All
                         </Button>
                         {printAllCategories()}
-                        {/* <Button bgColor={"black"} color='white'
-                            backgroundColor={category == "Coffee" ? ('orange.500') : ('black')}
-                            // _hover={{ bg: '#DE6B1F' }}
-                            _active={{
-                                bg: '#DE6B1F',
-                                transform: 'scale(0.98)',
-                            }}
-                            onClick={() => {
-                                setPage(0)
-                                setCategory("Coffee")
-                            }}
-                        >
-                            Coffee
-                        </Button>
-                        <Button bgColor={"black"} color='white'
-                            backgroundColor={category == "Croissant" ? ('orange.500') : ('black')}
-                            // _hover={{ bg: '#DE6B1F' }}
-                            _active={{
-                                bg: '#DE6B1F',
-                                transform: 'scale(0.98)',
-                            }}
-                            onClick={() => {
-                                setPage(0)
-                                setCategory("Croissant")
-                            }}
-                        >
-                            Croissant
-                        </Button>
-                        <Button bgColor={"black"} color='white'
-                            backgroundColor={category == "Ice Cream" ? ('orange.500') : ('black')}
-                            // _hover={{ bg: '#DE6B1F' }}
-                            _active={{
-                                bg: '#DE6B1F',
-                                transform: 'scale(0.98)',
-                            }}
-                            onClick={() => {
-                                setPage(0)
-                                setCategory("Ice Cream")
-                            }}
-                        >
-                            Ice Cream
-                        </Button> */}
                         {/* ======================================================================================================================== */}
                     </ButtonGroup>
                 </Flex>
