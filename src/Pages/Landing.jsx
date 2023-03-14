@@ -1,24 +1,30 @@
 import React from 'react';
-import { Box, Heading, Text, Select, Button, Flex, Image, Container, ButtonGroup, Icon, Menu, MenuItem, IconButton, MenuButton, MenuList } from '@chakra-ui/react';
+import { Box, Text, Button, Flex, Image, ButtonGroup, Menu, MenuItem, IconButton, MenuButton, MenuList, useDisclosure, Stack, HStack, Divider, ScaleFade, Spacer, useToast } from '@chakra-ui/react';
 import Product from '../Components/Product';
 import { SearchBar } from '../Components/SearchBar';
-import { FiFilter } from 'react-icons/fi';
+import { FiFilter, FiShoppingCart } from 'react-icons/fi';
+import { CgRemove } from 'react-icons/cg'
+
+
 import axios from "axios";
 import Pagination from '../Components/Pagination';
 
 
-const Landing = (props) => {
+const Landing = () => {
+    const toast = useToast()
+    const { onOpen } = useDisclosure()
+    const btnRef = React.useRef()
     const [showProducts, setShowProducts] = React.useState([]);
     const [page, setPage] = React.useState(0);
     const [size, setSize] = React.useState(6);
     const [productName, setProductName] = React.useState("");
     const [totalData, setTotalData] = React.useState(0);
-    const [currentPage, setCurrentPage] = React.useState(1);
     const [sortby, setSortby] = React.useState("name");
     const [order, setOrder] = React.useState("ASC");
     const [category, setCategory] = React.useState("");
     const [status] = React.useState(1);
     const [allcategory, setallCategory] = React.useState([]); // for get all category
+    const [cart, setCart] = React.useState([]);
 
     const getAllProducts = async () => {
         try {
@@ -42,18 +48,18 @@ const Landing = (props) => {
     React.useEffect(() => {
         getAllProducts();
     }, [page, sortby, order, category]);
-   
-   React.useEffect(() => {
+
+    React.useEffect(() => {
         getAllCategory();
     }, []);
+
 
     //3. Print list of products
     const printAllProducts = () => {
         // console.log("INI ISI Showproducts:", showProducts);
         let print = showProducts.map((val, idx) => {
             console.log("ini val : ", val);
-            console.log("ini ambil category data dari getAllProducts 🪶 : ", val.category.category);
-            return < Product name={val.name} productimage={val.product_image} price={val.price} />
+            return < Product id={val.id} name={val.name} uuid={val.uuid} productimage={val.product_image.includes("https") ? val.product_image : `http://localhost:2000${val.product_image}`} price={val.price} setCart={setCart} cart={cart} />
         });
         return print;
     }
@@ -75,9 +81,9 @@ const Landing = (props) => {
         return allcategory.map((val) => {
             console.log("hasil val category =", val.category);
             return (
-                <Button bgColor={"black"} color='white'
-                    backgroundColor={category == `${val.category}` ? ('orange.500') : ('black')}
-                    // _hover={{ bg: '#DE6B1F' }}
+                <Button variant='outline' bgColor={"black"} color='white'
+                    backgroundColor={category === `${val.category}` ? ('orange.500') : ('black')}
+                    _hover={{ bgColor: 'orange.500' }}
                     _active={{
                         bg: '#DE6B1F',
                         transform: 'scale(0.98)',
@@ -92,6 +98,83 @@ const Landing = (props) => {
             )
         })
     }
+    const printCart = () => {
+        console.log("aaaaaaaaaaaaaaaaaaaaaaaaa", cart)
+        let print = cart.map((val, idx) => {
+            console.log("ini val : ", val);
+            return (
+                <Box w={'95%'} mx="auto" >
+                    <HStack align="start" my="5">
+                        <Image
+                            src={`${val.image}`}
+                            alt='menu picture'
+                            borderRadius='xl'
+                            objectFit='cover'
+                            w='20'
+                            h='14'
+                            mr='2'
+                        />
+                        <Box maxW="xl" w='full'>
+                            <Flex >
+                                <Text fontWeight="bold" color='white'>
+                                    {val.name}
+                                </Text>
+                            </Flex>
+                            <Flex w='full' alignItems="center" justifyContent="space-between">
+                                <Text color='white'  >
+                                    Amount: <Text as='span' color='orange' fontWeight="semibold">{val.total_quantity}</Text>
+                                </Text>
+                                <IconButton variant="unstyled" color="red" _hover={{ color: "white" }} icon={<CgRemove size="25px" />} onClick={() => {
+                                    let find = cart.findIndex((data) => data.uuid === val.uuid)
+                                    let temp = [...cart];
+                                    temp.splice(find, 1);
+                                    setCart(temp);
+                                }
+                                } />
+                                <Text fontSize="md">
+                                    Rp. {val.price * val.total_quantity}
+                                </Text>
+                            </Flex>
+                        </Box>
+                    </HStack>
+                </Box>
+            )
+        });
+        return print;
+
+    }
+    const confirmTransaction = async () => {
+        try {
+            let token = localStorage.getItem("coffee_login");
+            console.log(cart)
+            let response = await axios.post(`http://localhost:2000/transaction/add`, {
+                array: cart
+            }, {
+                headers: {
+                    'Authorization': `Bearer ${token}`
+                }
+            });
+            if (response) {
+                setCart([])
+                toast({
+                    description: `transaction is successfull`,
+                    position: "top",
+                    status: 'success',
+                    duration: 2000,
+                    isClosable: true
+                })
+            }
+        } catch (error) {
+            toast({
+                description: `transaction failed`,
+                position: "top",
+                status: 'error',
+                duration: 2000,
+                isClosable: true
+            })
+            console.log(error)
+        }
+    }
 
 
     // Change page
@@ -99,10 +182,14 @@ const Landing = (props) => {
         setPage(pageNumber);
     };
 
+    let subTotal = cart.reduce((a, b) => a + b.price * b.total_quantity, 0);
+    let tax = 1.1 * subTotal;
+    let total = subTotal + tax;
+
     return (
         <Flex
-            minH={'100vh'}
-            align={'center'}
+            minH={'92.5vh'}
+            // align={'center'}
             justify={'center'}
             bg={'black'}
         >
@@ -110,12 +197,13 @@ const Landing = (props) => {
             <Box flex={{ base: 'none', lg: '1' }}>
             </Box>
             {/* MIDDLE CONTENT */}
-            <Box paddingTop='4' pb='8'
-                flex='4'
+            <Box paddingTop='4' pb='4'
+                flex='3'
+                zIndex={'banner'}
             >
                 <Text fontSize='4xl' fontWeight='bold' color='white' p={{ base: '8', lg: '4' }}>
-                    Find the best
-                    <Text fontSize='4xl' fontWeight='bold' color='white' pb={{ base: '-10', lg: '10' }} pt='-5'>coffee for you</Text>
+                    Find the best coffee for you
+                    {/* <Text fontSize='4xl' fontWeight='bold' color='white' pb={{ base: '-10', }} pt='-5'>coffee for you</Text> */}
                 </Text>
                 <Flex p={{ base: '4', lg: '2' }} >
                     <Flex pl={{ base: '6', lg: '2' }} pr='2'>
@@ -129,6 +217,7 @@ const Landing = (props) => {
                             variant='outline'
                             color='white'
                             _expanded={{ bg: 'white', color: 'black' }}
+                            mr="2"
                         />
                         <MenuList>
                             <MenuItem onClick={() => {
@@ -158,12 +247,12 @@ const Landing = (props) => {
                         </MenuList>
                     </Menu>
                 </Flex>
-                <Flex pb='5' pl={{ base: '3', lg: '2' }}>
+                <Flex py='2' pl={{ base: '3', lg: '4' }} overflowX='scroll'>
                     <ButtonGroup>
                         {/* ======================================================================================================================== */}
-                        <Button bgColor={"black"} color='white'
-                            backgroundColor={category == "" ? ('orange.500') : ('black')}
-                            //  _hover={{ bg: '#DE6B1F' }}
+                        <Button variant='outline' bgColor={"black"} color='white'
+                            backgroundColor={category === "" ? ('orange.500') : ('black')}
+                            _hover={{ bgColor: 'orange.500' }}
                             _active={{
                                 bg: '#DE6B1F',
                                 transform: 'scale(0.98)',
@@ -181,16 +270,58 @@ const Landing = (props) => {
                 </Flex>
                 <Flex maxW='6xs' flexWrap='wrap' justifyContent='space-evenly' alignItem='start'>
                     {printAllProducts()}
-                    <Flex my='10' w='full' justify={'center'}>
+                    <Flex mt='4' w='full' justify={'center'}>
                         <Pagination size={size} page={page} totalData={totalData} paginate={paginate} />
                     </Flex>
                 </Flex>
 
             </Box>
             {/* RIGHT CONTENT */}
-            <Box flex={{ base: 'none', lg: '1' }}>
-            </Box>
-        </Flex>
+            <Box flex="1" height="92.5vh" bgColor={cart.length === 0 ? ("transparent") : ("gray.900")} color='white' >
+                <ScaleFade in={cart.length > 0} initialScale={0.9}>
+                    <Box display={cart.length === 0 ? ("none") : ("block")}>
+                        <Text textAlign="center" fontSize='2xl' fontWeight='bold' pb='5' color='white' borderColor='white'>Order Details</Text>
+                        <Divider w="98%" mx="auto" mb='6' />
+                        <Stack spacing={1} >
+                            <Box mb='8' >
+                                <Stack spacing={1} >
+                                    <Box overflowY="scroll" height={{ md: "58vh", lg: "50vh" }}>
+                                        {printCart()}
+                                    </Box>
+                                </Stack>
+                            </Box>
+                        </Stack>
+                        <Box position="relative" bottom='1' fontWeight="semibold">
+                            <Flex w="95%" justifyContent="space-between" mx="auto" >
+                                <Text>Sub-Total</Text>
+                                <Text>Rp. {subTotal}</Text>
+                            </Flex>
+                            <Flex w="95%" my="4" justifyContent="space-between" mx="auto">
+                                <Text>Discount</Text>
+
+                                <Text>0</Text>
+                            </Flex>
+                            <Flex w="95%" pb='4' justifyContent="space-between" mx="auto">
+                                <Text>Tax (10%)</Text>
+                                <Text>RP. {tax}</Text>
+                            </Flex>
+                        </Box>
+                        <Flex borderTop='1px' borderColor='white' pt='4' w="full" mb="4">
+                            <Text fontWeight='bold' color='white' >
+                                Total
+                            </Text>
+                            <Spacer />
+                            <Text fontWeight='bold' color='orange.500' >
+                                {total}
+                            </Text>
+                        </Flex>
+                        <Box bgColor="orange.500" w='100%' as='button' type='button' _hover={{ bgColor: "orange.600" }} boxShadow="dark-lg" mt={{ lg: '-2', xl: '5' }} onClick={confirmTransaction}>
+                            <Text textAlign="center" fontSize="xl" fontWeight="semibold" py={{ xl: "4", lg: "2" }}>Confirm</Text>
+                        </Box>
+                    </Box>
+                </ScaleFade >
+            </Box >
+        </Flex >
     )
 };
 
