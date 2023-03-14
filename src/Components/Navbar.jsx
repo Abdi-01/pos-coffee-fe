@@ -47,7 +47,7 @@ export default function Navbar() {
   return (
     <>
       <Box bgColor='gray.900' px={{ base: '6', md: '4' }}>
-        <Flex h={16} alignItems={'center'} justifyContent={'space-between'}>
+        <Flex h={"7.5vh"} alignItems={'center'} justifyContent={'space-between'}>
           <IconButton
             bgColor={'gray.900'}
             color='white'
@@ -59,9 +59,9 @@ export default function Navbar() {
           />
           <HStack spacing={2} alignItems={'center'}>
             <Box>
-              <Image src={Coffeecashierlogo} boxSize='40px' alt="coffeecashier_logo" />
+              <Image src={Coffeecashierlogo} boxSize='40px' alt="coffeecashier_logo" onClick={() => navigate('/landing')} cursor="pointer" />
             </Box>
-            <Text fontWeight='bold' fontSize='2xl' color='white' className='test' pr='8' display={{ base: 'none', md: 'flex' }}>
+            <Text fontWeight='bold' fontSize='2xl' color='white' className='test' pr='8' display={{ base: 'none', md: 'flex' }} as='button' onClick={() => navigate('/landing')}>
               COFFEE SHOP
             </Text>
 
@@ -115,7 +115,7 @@ export default function Navbar() {
         </Flex>
 
         {isOpen ? (
-          <Box pb={4} display={{ md: 'none' }}>
+          <Box pb={4} display={{ lg: 'none' }}>
             <Stack as={'nav'} spacing={4}>
               {
                 username ?

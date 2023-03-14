@@ -6,8 +6,7 @@ import { BiEditAlt } from 'react-icons/bi'
 
 import { BsPlusLg } from 'react-icons/bs'
 import ModalProd from '../Components/ModalProd';
-import ModalCategory from '../Components/ModalCategory';
-import ModalEcat from '../Components/ModalEcat';
+import Modaledit from '../Components/Modaledit'
 
 
 
@@ -15,22 +14,28 @@ import ModalEcat from '../Components/ModalEcat';
 function Inventory() {
     const toast = useToast()
     const modalProduct = useDisclosure();
+    const modalEdit = useDisclosure();
+    const modalProductImage = useDisclosure();
+    const inputFile = React.useRef(null);
+    const [fileProduct, setFileProduct] = React.useState(null);
     const [page, setPage] = React.useState(0);
     const [size, setSize] = React.useState(99999);
+    const [uuid, setUuid] = React.useState("")
     const [productName, setProductName] = React.useState("");
     const [sortby, setSortby] = React.useState("name");
     const [order, setOrder] = React.useState("ASC");
     const [showProducts, setShowProducts] = React.useState([]);
-    const [allcategory, setallCategory] = React.useState([]); // for get all category
+    const [allcategory, setallCategory] = React.useState([]); // for get all category, prlu untuk component modal yg dipakai di page ini
     const [name, setName] = React.useState("");
     const [productImage, setProductImage] = React.useState("");
     const [price, setPrice] = React.useState(0);
     const [stock, setStock] = React.useState(0);
     const [categoryId, setCategoryId] = React.useState(1); // for create new product
-    const [status, setStatus] = React.useState([]);
+    const [allStatus, setAllStatus] = React.useState([]);
     const [statusId, setStatusId] = React.useState("1");
     const [category] = React.useState("");
     const [statusget] = React.useState("");
+    const [catformodal, setCatForModal] = React.useState("")
 
 
     const getAllCategory = async () => {
@@ -57,30 +62,46 @@ function Inventory() {
                 }
             })
             console.log("hasil response get all status", response.data.data)
-            setStatus(response.data.data)
+            setAllStatus(response.data.data)
         } catch (error) {
-            console.log("dari getAllCategory : ", error);
+            console.log("dari getAllStatus : ", error);
         }
     }
 
+    const onChangeFile = (event) => {
+        modalProductImage.onOpen();
+        setFileProduct(event.target.files[0]);
+    };
+
     const addNewProduct = async () => {
         try {
+            let formData = new FormData();
             let token = localStorage.getItem("coffee_login");
-            let response = await axios.post(`http://localhost:2000/products/add_product`, {
-                name: name,
-                product_image: productImage,
-                price: price,
-                stock: stock,
-                categoryId: categoryId,
-                statusId: statusId
-            }, {
+
+            formData.append(
+                "data",
+                JSON.stringify({
+                    name: name,
+                    price: price,
+                    stock: stock,
+                    categoryId: categoryId,
+                    statusId: statusId
+                })
+            );
+            if (formData != null) {
+                formData.append("images", fileProduct);
+            }
+
+
+            let response = await axios.post(`http://localhost:2000/products/add_product`,
+                formData, {
                 headers: {
                     'Authorization': `Bearer ${token}`
                 }
             })
             if (response) {
+                setFileProduct(null);
 
-                modalProduct.onClose();
                 toast({
                     description: `${name} has been added`,
                     position: "top",
@@ -89,15 +110,17 @@ function Inventory() {
                     isClosable: true
                 })
                 getAllProducts();
+                modalProduct.onClose();
             }
         } catch (error) {
-            console.log("dari getAllCategory : ", error);
+            console.log("dari addNewProduct : ", error);
         }
     }
 
     const getAllProducts = async () => {
         try {
             let token = localStorage.getItem("coffee_login");
+
             let response = await axios.post(`http://localhost:2000/products/list?page=${page}&size=${size}&name=${productName}&sortby=${sortby}&order=${order}&category=${category}&status=${statusget}`, {}, {
                 headers: {
                     'Authorization': `Bearer ${token}`
@@ -141,27 +164,41 @@ function Inventory() {
 
     const printAllProducts = () => {
         return showProducts.map((val, idx) => {
-            // console.log("hasil val =", val);
+            console.log("hasil val print products =", val);
             return (
+                <>
+                    <Tr color="white">
+                        <Td>{idx + 1}</Td>
+                        <Td>{val.name}</Td>
+                        <Td><Image objectFit="cover" src={val.product_image.includes("https") ? val.product_image : `http://localhost:2000${val.product_image}`} rounded="2xl" boxSize="200px" alt="product image" /></Td>
+                        {/* `${API_URL}${props.image}` */}
+                        <Td>{val.price}</Td>
+                        <Td>{val.stock}</Td>
+                        <Td>{val.category.category}</Td>
+                        <Td color={val.status.status === "Disabled" ? ("red") : ("green")}>{val.status.status}</Td>
+                        <Td>
+                            <Stack spacing={4} direction='row' align="center">
+                                <IconButton variant="ghost" colorScheme={"orange"} fontSize="2xl" icon={<BiEditAlt />} onClick={() => onEditButton(val.uuid, val.name, val.price, val.stock, val.category.category)}></IconButton>
 
-                <Tr color="white">
-                    <Td>{idx + 1}</Td>
-                    <Td>{val.name}</Td>
-                    <Td><Image objectFit="cover" src={val.product_image} rounded="2xl" boxSize="200px" alt="product image" /></Td>
-                    <Td>{val.price}</Td>
-                    <Td>{val.stock}</Td>
-                    <Td>{val.category.category}</Td>
-                    <Td color={val.status.status == "Disabled" ? ("red") : ("green")}>{val.status.status}</Td>
-                    <Td>
-                        <Stack spacing={4} direction='row' align="center">
-                            <IconButton variant="ghost" colorScheme={"orange"} fontSize="2xl" icon={<BiEditAlt />} ></IconButton>
-                            {val.statusId == 1 ? (<Switch colorScheme="orange" defaultChecked onChange={() => deleteItem(val.uuid)} />) : (<Switch colorScheme="orange" onChange={() => deleteItem(val.uuid)} />)}
+                                {val.statusId === 1 ? (<Switch colorScheme="orange" defaultChecked onChange={() => deleteItem(val.uuid)} />) : (<Switch colorScheme="orange" onChange={() => deleteItem(val.uuid)} />)}
 
-                        </Stack>
-                    </Td>
-                </Tr>
+                            </Stack>
+                        </Td>
+                    </Tr>
+                </>
+
+
             )
         })
+    }
+
+    const onEditButton = (uuid, valname, valprice, valstock, valcategory) => {
+        modalEdit.onOpen()
+        setUuid(uuid)
+        setName(valname)
+        setPrice(valprice)
+        setStock(valstock)
+        setCatForModal(valcategory)
     }
 
     React.useEffect(() => {
@@ -176,7 +213,10 @@ function Inventory() {
                 <Flex py="5" alignItems="center" justifyContent="space-between">
                     <Text color="White" fontSize="3xl" fontWeight="semibold"> All Products</Text>
                     <Button variant="solid" colorScheme={"orange"} mt="2" onClick={modalProduct.onOpen}> <BsPlusLg /> <Text marginLeft="3" mb="3px" fontSize="xl">Product</Text></Button>
-                    <ModalProd isOpen={modalProduct.isOpen} onClose={modalProduct.onClose} allcategory={allcategory} addNewProduct={addNewProduct} name={name} setName={setName} productImage={productImage} setProductImage={setProductImage} price={price} setPrice={setPrice} stock={stock} setStock={setStock} setCategoryId={setCategoryId} status={status} setStatusId={setStatusId} />
+                    {/* =================================================================== Product Add modal ============================================================ */}
+                    <ModalProd isOpen={modalProduct.isOpen} onClose={modalProduct.onClose} allcategory={allcategory} addNewProduct={addNewProduct} name={name} setName={setName} productImage={productImage} setProductImage={setProductImage} price={price} setPrice={setPrice} stock={stock} setStock={setStock} setCategoryId={setCategoryId} allStatus={allStatus} setStatusId={setStatusId} inputFile={inputFile} onChangeFile={onChangeFile} modalProductImageisOpen={modalProductImage.isOpen} modalProductImageonClose={modalProductImage.onClose} fileProduct={fileProduct} setFileProduct={setFileProduct} />
+                    {/* =================================================================== Product edit modal ============================================================ */}
+                    <Modaledit isOpen={modalEdit.isOpen} onClose={modalEdit.onClose} allcategory={allcategory} name={name} setName={setName} productImage={productImage} setProductImage={setProductImage} price={price} setPrice={setPrice} stock={stock} setStock={setStock} categoryId={categoryId} setCategoryId={setCategoryId} allStatus={allStatus} statusId={statusId} setStatusId={setStatusId} inputFile={inputFile} onChangeFile={onChangeFile} modalProductImageisOpen={modalProductImage.isOpen} modalProductImageonClose={modalProductImage.onClose} fileProduct={fileProduct} setFileProduct={setFileProduct} uuid={uuid} getAllProducts={getAllProducts} catformodal={catformodal} />
                 </Flex>
                 <TableContainer overflowX="hidden" maxW="100%">
                     <Table variant='simple' fontSize="xl">
